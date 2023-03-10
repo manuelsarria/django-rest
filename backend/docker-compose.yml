@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  db:
+    env_file:
+      - .env
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+  api:
+    env_file:
+      - .env
+    platform: linux/amd64
+    container_name: back-api
+    build:
+      context: ./
+      dockerfile: /Users/manuelsarria/Desktop/rest django/stakesauce-backend/backend/docker/development/django/Dockerfile
+      args:
+        - SECRET_KEY=${SECRET_KEY}
+    image: back-api
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    environment:
+      - DJANGO_SETTINGS_MODULE=src.settings.development
+    links:
+      - db
+    volumes:
+      - './:/src'
+volumes:
+  db:
+    driver: local
