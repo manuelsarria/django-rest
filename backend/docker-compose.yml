@@ -8,6 +8,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - DJANGO_SETTINGS_MODULE=src.settings.base
     ports:
       - '5432:5432'
     volumes: 
@@ -26,9 +27,9 @@ services:
     depends_on:
       - db
     ports:
-      - 3000:3000
+      - 8000:8000
     environment:
-      - DJANGO_SETTINGS_MODULE=src.settings.development
+      - DJANGO_SETTINGS_MODULE=src.settings.base
     links:
       - db
     volumes:

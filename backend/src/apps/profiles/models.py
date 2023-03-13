@@ -27,8 +27,8 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     otp_secret = models.CharField(max_length = 40, blank=True)
     has_mfa_configured = models.BooleanField(default=False)
-    coincover_password = models.CharField(max_length = 100, blank=True)
-    kyc = models.BooleanField(default=False)
+    # coincover_password = models.CharField(max_length = 100, blank=True)
+    # kyc = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -40,9 +40,9 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_superuser
 
-    @property
-    def has_coincover_password(self):
-        return True if self.coincover_password else False
+    # @property
+    # def has_coincover_password(self):
+    #     return True if self.coincover_password else False
 
     @property
     def secret_url(self):

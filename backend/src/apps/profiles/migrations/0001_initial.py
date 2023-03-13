@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('is_staff', models.BooleanField(default=False)),
                 ('otp_secret', models.CharField(blank=True, max_length=40)),
                 ('has_mfa_configured', models.BooleanField(default=False)),
-                ('coincover_password', models.CharField(blank=True, max_length=100)),
+                # ('coincover_password', models.CharField(blank=True, max_length=100)),
             ],
             options={
                 'abstract': False,

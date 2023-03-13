@@ -45,14 +45,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'wallets',
-                  'coincover_password', 'has_coincover_password']
+        # fields = ['id', 'first_name', 'last_name', 'email', 'wallets',
+        #           'coincover_password', 'has_coincover_password']
+        fields = ['id', 'first_name', 'last_name', 'email', 'wallets']
 
     def update(self, instance, validated_data):
         validated_data.pop('password', None)
-        if validated_data.get('coincover_password'):
-            validated_data['coincover_password'] = make_password(
-                validated_data['coincover_password'])
+        # if validated_data.get('coincover_password'):
+        #     validated_data['coincover_password'] = make_password(
+        #         validated_data['coincover_password'])
         for key, arg in validated_data.items():
             setattr(instance, key, arg)
         instance.save()
@@ -60,5 +61,5 @@ class UserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super(UserSerializer, self).to_representation(instance)
-        data.pop('coincover_password', None)
+        # data.pop('coincover_password', None)
         return data

@@ -33,7 +33,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'ui-backend.dev.stakesauce.net',
-    'ui.dev.stakesauce.net'
+    'ui.dev.stakesauce.net',
+    'localhost'
 ]
 
 CORS_ALLOWED_ORIGINS = [
