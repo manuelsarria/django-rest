@@ -2,7 +2,8 @@ import pyotp
 
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -16,7 +17,6 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.save()
-
 
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
@@ -39,6 +39,9 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_superuser
+    
+    def get_profile(self):
+        return Profile.objects.get(user=self)
 
     # @property
     # def has_coincover_password(self):
@@ -52,7 +55,6 @@ class User(AbstractBaseUser):
                 .provisioning_uri(self.email, issuer_name="Stakesauce")
         return secret_url
 
-
 class Wallet(models.Model):
     POKT = 'POKT'
     CHAIN_CHOICES = [
@@ -62,3 +64,23 @@ class Wallet(models.Model):
     user = models.ForeignKey(User, related_name='wallets', on_delete=models.CASCADE)
     address = models.CharField(max_length=100)
     chain = models.CharField(max_length=4, choices=CHAIN_CHOICES, default=POKT)
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, related_name='profiles', on_delete=models.CASCADE)
+    bio = models.CharField(max_length=500, blank=True)
+    website =  models.URLField(blank=True)
+    
+    def __str__(self):
+        return self.user.first_name
+    
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+      if created:
+        Profile.objects.create(user=instance)
+        
+class UserProfiles(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.first_name
