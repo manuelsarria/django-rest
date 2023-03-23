@@ -66,7 +66,7 @@ class Wallet(models.Model):
     chain = models.CharField(max_length=4, choices=CHAIN_CHOICES, default=POKT)
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, related_name='profiles', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='profiles', on_delete=models.CASCADE)
     bio = models.CharField(max_length=500, blank=True)
     website =  models.URLField(blank=True)
     
@@ -78,9 +78,9 @@ class Profile(models.Model):
       if created:
         Profile.objects.create(user=instance)
         
-class UserProfiles(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+# class UserProfiles(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.user.first_name
+#     def __str__(self):
+#         return self.user.first_name

@@ -3,7 +3,7 @@ import pyotp
 from rest_framework import  serializers
 from django.contrib.auth.hashers import make_password
 
-from apps.profiles.models import User, Wallet
+from apps.profiles.models import User, Wallet, Profile
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -63,3 +63,8 @@ class UserSerializer(serializers.ModelSerializer):
         data = super(UserSerializer, self).to_representation(instance)
         # data.pop('coincover_password', None)
         return data
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['user', 'bio', 'website']

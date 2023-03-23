@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
 
 from apps.profiles import views as profile_views
+from apps.profiles.router import router_profile
 
 
 urlpatterns = [
@@ -14,4 +15,6 @@ urlpatterns = [
 
     path('user/', profile_views.UserView.as_view(), name='user_detail'),
     path('user/wallet/', profile_views.WalletView.as_view(), name='user_wallet'),
+    path('user/profiles/', profile_views.ProfileListView.as_view(), name='user_profiles'),
+    path('user/profile/', include(router_profile.urls)),
 ]

@@ -2,12 +2,16 @@ import pyotp
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.tokens import OutstandingToken, BlacklistedToken
+from apps.profiles.models import Profile
 
 from apps.profiles.serializer import (RegisterSerializer, UserSerializer,
-                                      OTPSerializer, OTPQrSerializer, WalletSerializer)
+                                      OTPSerializer, OTPQrSerializer, WalletSerializer,
+                                      ProfileSerializer)
 
 
 class RegisterView(generics.GenericAPIView):
@@ -157,3 +161,18 @@ class WalletView(generics.GenericAPIView):
             return Response({
                 "error" : "Error encountered"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+class ProfileviewSet(ModelViewSet):
+  permission_classes = [IsAuthenticatedOrReadOnly]
+  serializer_class = ProfileSerializer
+  queryset = Profile.objects.all()
+  
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 50
+  
+class ProfileListView(generics.ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    pagination_class = LargeResultsSetPagination
