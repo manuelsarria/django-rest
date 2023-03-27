@@ -28,7 +28,7 @@ urlpatterns = [
 
     path('user/', profile_views.UserView.as_view(), name='user_detail'),
     path('user/wallet/', profile_views.WalletView.as_view(), name='user_wallet'),
-    path('user/profiles/', profile_views.ProfileListView.as_view(), name='user_profiles'),
+    path('user/profile/all/', profile_views.ProfileListView.as_view(), name='user_profiles'),
     path('user/profile/', include(router_profile.urls)),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
