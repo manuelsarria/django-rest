@@ -3,5 +3,5 @@ from apps.profiles.views import ProfileviewSet
 
 router_profile = DefaultRouter()
 
-router_profile.register(prefix='profiles', basename='profiles', viewset=ProfileviewSet)
+router_profile.register(prefix='', basename='', viewset=ProfileviewSet)
 

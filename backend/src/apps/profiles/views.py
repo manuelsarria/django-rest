@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.tokens import OutstandingToken, BlacklistedToken
 from apps.profiles.models import Profile
+from .tasks import waitNSeconds
 
 from apps.profiles.serializer import (RegisterSerializer, UserSerializer,
                                       OTPSerializer, OTPQrSerializer, WalletSerializer,
@@ -163,7 +164,8 @@ class WalletView(generics.GenericAPIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 class ProfileviewSet(ModelViewSet):
-  permission_classes = [IsAuthenticatedOrReadOnly]
+#   permission_classes = [IsAuthenticatedOrReadOnly]
+  waitNSeconds.delay(3)
   serializer_class = ProfileSerializer
   queryset = Profile.objects.all()
   
