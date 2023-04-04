@@ -20,20 +20,48 @@ services:
     container_name: back-api
     build:
       context: ./
-      dockerfile: /Users/manuelsarria/Desktop/rest django/stakesauce-backend/backend/docker/development/django/Dockerfile
+      dockerfile: ./docker/development/django/Dockerfile
       args:
         - SECRET_KEY=${SECRET_KEY}
     image: back-api
     depends_on:
       - db
+      - redis
     ports:
       - 8000:8000
-    environment:
-      - DJANGO_SETTINGS_MODULE=src.settings.base
     links:
       - db
     volumes:
       - './:/src'
+  celery:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/development/celery/Dockerfile
+    command: bash -c "src/run_celery.sh"
+    env_file:
+      - .env
+    volumes:
+      - .:/src/apps/profiles
+    depends_on:
+      - api
+      - redis
+  redis:
+    image: "redis:alpine"
+    ports:
+     - 6379:6379
+  flower:
+    image: mher/flower
+    # command: celery -A src.apps.profiles.celery flower
+    command: sh -c "sleep 60 && celery -A apps.profiles.celery flower"
+    # command: ["sleep", "60s", "&&", "celery -A src.apps.profiles.celery flower"]
+    ports:
+      - 5555:5555
+    env_file:
+      - .env
+    depends_on:
+      - celery
+      - redis
 volumes:
   db:
     driver: local
