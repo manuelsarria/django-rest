@@ -42,7 +42,7 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/src/apps/profiles
+      - .:/src/src
     depends_on:
       - api
       - redis
@@ -52,9 +52,7 @@ services:
      - 6379:6379
   flower:
     image: mher/flower
-    # command: celery -A src.apps.profiles.celery flower
-    command: sh -c "sleep 60 && celery -A apps.profiles.celery flower"
-    # command: ["sleep", "60s", "&&", "celery -A src.apps.profiles.celery flower"]
+    command: sh -c "sleep 60 && celery -A celery flower"
     ports:
       - 5555:5555
     env_file:
