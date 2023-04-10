@@ -52,7 +52,7 @@ services:
      - 6379:6379
   flower:
     image: mher/flower
-    command: sh -c "sleep 60 && celery -A celery flower"
+    command: sh -c "sleep 60 && celery -A celery flower  && flower -A apps.profiles.tasks"
     ports:
       - 5555:5555
     env_file:

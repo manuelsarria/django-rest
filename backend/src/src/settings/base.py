@@ -14,6 +14,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
+from celery.schedules import crontab
+
 
 load_dotenv()
 
@@ -214,3 +216,10 @@ REDIS_HOST = 'redis'
 
 CELERY_RESULT_BACKEND = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
 CELERY_REDIS_MAX_CONNECTIONS = 10
+
+CELERYBEAT_SCHEDULE = {
+    'send-periodic-email': {
+        'task': 'tasks.send_periodic_email',
+        'schedule': crontab(minute='*/5'), # cada 5 minutos
+    },
+}
