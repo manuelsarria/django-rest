@@ -16,6 +16,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from celery.schedules import crontab
 
+from apps.profiles.tasks import send_periodic_email
+
 
 load_dotenv()
 
@@ -67,6 +69,7 @@ THIRD_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'anymail',
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
@@ -221,5 +224,19 @@ CELERYBEAT_SCHEDULE = {
     'send-periodic-email': {
         'task': 'tasks.send_periodic_email',
         'schedule': crontab(minute='*/5'), # cada 5 minutos
+    },
+}
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
+    "MAILGUN_SENDER_DOMAIN": os.environ.get('MAILGUN_SENDER_DOMAIN'),
+}
+
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
+CELERY_BEAT_SCHEDULE = {
+    'send_periodic_email': {
+        'task': send_periodic_email(),
+        'schedule': 60.0,  # cada minuto
     },
 }

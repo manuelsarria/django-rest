@@ -4,11 +4,11 @@ services:
     env_file:
       - .env
     image: postgres:14.1-alpine
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5432"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:5432"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -29,11 +29,11 @@ services:
       args:
         - SECRET_KEY=${SECRET_KEY}
     image: back-api
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
     depends_on:
       - db
       - redis
@@ -49,11 +49,11 @@ services:
       context: ./
       dockerfile: ./docker/development/celery/Dockerfile
     command: bash -c "src/run_celery.sh"
-    healthcheck:
-      test: celery --app=src inspect ping
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # healthcheck:
+    #   test: celery --app=src inspect ping
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
     env_file:
       - .env
     volumes:
@@ -63,11 +63,11 @@ services:
       - redis
   redis:
     image: "redis:alpine"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6379"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:6379"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
     ports:
      - 6379:6379
   flower:
